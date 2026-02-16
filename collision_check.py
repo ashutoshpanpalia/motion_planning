@@ -8,18 +8,19 @@ class collision_check:
         self.y1 = y1
         self.x2 = x2
         self.y2 =y2
-
-        self.collision_check = True
+        self.collision_check = False
 
     def points_from_start_2_end(self):
+        if self.x1 == self.x2 and self.y1 == self.y2:
+            return [[self.x1, self.y1]]
         t=0
-        step_size = 0.1
+        step_size = 0.5
         point_list = []
         dist= np.linalg.norm(np.array([self.x2 - self.x1, self.y2 - self.y1]))
 
         while t<=1:
-            x= int(t*self.x1 +(1-t)*self.x2)
-            y= int(t*self.y1 +(1-t)*self.y2)
+            x = int((1 - t) * self.x1 + t * self.x2)
+            y = int((1 - t) * self.y1 + t * self.y2)
 
             t += step_size/dist
             point_list.append([x,y]) 
@@ -28,10 +29,13 @@ class collision_check:
     
     def result(self):
         point= self.points_from_start_2_end()
-        for x,y in point:
-            if self.map[x,y]==0:
-                self.collision_check = False
-                break
+        h, w = self.map.shape
+
+        for x, y in point:
+            if x < 0 or x >= w or y < 0 or y >= h:
+                return True 
+            if self.map[y, x] == 1:
+                return True
 
         return self.collision_check
     
