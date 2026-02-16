@@ -4,7 +4,7 @@ from tree_node import Node
 from collision_check import collision_check
 
 class RRT:
-    def __init__(self,map, start, end, radius=25.0, dist=10,viz=True):
+    def __init__(self,map, start, end, radius=25.0, dist=10,viz=True, num_itr=2000):
         self.map = map
         self.start= Node(start[0],start[1])
         self.start.parent= None
@@ -12,7 +12,7 @@ class RRT:
         self.radius = radius
         self.dist= dist
         self.tree=[self.start]
-        self.num_itr = 2000
+        self.num_itr = num_itr
         self.viz=viz
 
     def random_point(self):
@@ -47,8 +47,8 @@ class RRT:
         step = min(self.dist, length)
         new_point = nearest_point + (direction / length) * step
         # Clamp to map bounds
-        new_point[0] = np.clip(new_point[0], 0, self.map.shape[0] - 1)
-        new_point[1] = np.clip(new_point[1], 0, self.map.shape[1] - 1)
+        new_point[0] = np.clip(new_point[0], 0, self.map.shape[1] - 1)
+        new_point[1] = np.clip(new_point[1], 0, self.map.shape[0] - 1)
         # Convert to int grid coordinates
         return [int(round(new_point[0])), int(round(new_point[1]))]
 
